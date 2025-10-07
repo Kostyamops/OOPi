@@ -5,7 +5,7 @@ public class MoneyStorage
 {
     private Dictionary<decimal, int> _cash = new()
     {
-        {1,0},{2,0},{5,0},{10,0},{50,0},{100,0},{200,0},{500,0}
+        {1,10},{2,10},{5,10},{10,10},{50,5},{100,5},{200,2},{500,1}
     };
 
     private static readonly decimal[] _denomsDesc = {500,200,100,50,10,5,2,1};

@@ -20,20 +20,16 @@ public class VendingMachine
 
     public void SeedDemo()
     {
-        _slots[0].SetProduct(new Product("Вода"), 35, 5);
-        _slots[1].SetProduct(new Product("Сок"), 55, 3);
-        _slots[2].SetProduct(new Product("Чипсы"), 70, 4);
-        _slots[3].SetProduct(new Product("Шоколад"), 80, 2);
-        _slots[4].SetProduct(new Product("Кофе"), 60, 6);
-        _slots[5].SetProduct(new Product("Чай"), 40, 2);
-        _slots[6].SetProduct(new Product("Батончик"), 50, 5);
-        _slots[7].SetProduct(new Product("Орехи"), 90, 1);
-        _slots[8].SetProduct(new Product("Лимонад"), 65, 4);
-
-        _moneyStorage.TryAddMoney(10);
-        _moneyStorage.TryAddMoney(50);
-        _moneyStorage.TryAddMoney(100);
-        _moneyStorage.TryAddMoney(500);
+        _slots[0].SetProduct(new Product("Добри кола 0.5"), 120, 5);
+        _slots[1].SetProduct(new Product("Злой сок 0.3"), 55, 3);
+        _slots[2].SetProduct(new Product("Чипсы слейс"), 70, 4);
+        _slots[3].SetProduct(new Product("Орешки 'Биг-боб'"), 80, 1);
+        _slots[4].SetProduct(new Product("-"), 60, 0);
+        _slots[5].SetProduct(new Product("Липтон 0.5"), 40, 2);
+        _slots[6].SetProduct(new Product("-"), 50, 0);
+        _slots[7].SetProduct(new Product("Сэндвич"), 90, 1);
+        _slots[8].SetProduct(new Product("Сухарики 4 корочки"), 20, 4);
+        
     }
 
     private decimal TotalUserBalance => _cashBalance + _cardBalance;
@@ -43,29 +39,29 @@ public class VendingMachine
         while (true)
         {
             ConsoleUI.Clear();
-            Console.WriteLine("Меню");
             Console.WriteLine("------------------");
-            Console.WriteLine($"Наличные: {_cashBalance}");
-            Console.WriteLine($"Карта:    {_cardBalance}");
-            Console.WriteLine($"Итого:    {TotalUserBalance}");
+            Console.WriteLine("Добро пожаловать, друг!");
+            Console.WriteLine("Я автомат одного из корпусов Алабуба Политех.");
+            Console.WriteLine("------------------");
+            Console.WriteLine($"Баланс:    {TotalUserBalance}");
             Console.WriteLine();
             Console.WriteLine("1. Товары");
             Console.WriteLine("2. Пополнить");
             Console.WriteLine("3. Купить");
             Console.WriteLine("4. Сдача");
-            Console.WriteLine("9. Админ");
+            Console.WriteLine("5. Панель администратора");
             Console.WriteLine("0. Выход");
             Console.Write(">> ");
             var c = Console.ReadLine();
             switch (c)
             {
                 case "1": ShowAllProducts(); break;
-                case "2": AddFundsFlow(); break;
+                case "2": AddMoney(); break;
                 case "3": BuyFlow(); break;
                 case "4": ReturnChange(); break;
-                case "9": EnterAdminMode(); break;
+                case "5": EnterAdminMode(); break;
                 case "0": return;
-                default: ConsoleUI.Pause("Ошибка ввода."); break;
+                default: ConsoleUI.Pause("Ошибка команды."); break;
             }
         }
     }
@@ -84,15 +80,17 @@ public class VendingMachine
         ConsoleUI.Pause();
     }
 
-    private void AddFundsFlow()
+        private void AddMoney()
     {
-        bool again = true;
-        while (again)
+        while (true)
         {
             ConsoleUI.Clear();
             Console.WriteLine("Пополнение");
             Console.WriteLine("------------------");
-            Console.WriteLine("1. Наличные");
+            Console.WriteLine($"Баланс наличными: {_cashBalance}");
+            Console.WriteLine($"Баланс картой: {_cardBalance}");
+            Console.WriteLine("------------------");
+            Console.WriteLine("1. Нал");
             Console.WriteLine("2. Карта");
             Console.WriteLine("0. Назад");
             Console.Write(">> ");
@@ -104,18 +102,20 @@ public class VendingMachine
                 Console.WriteLine("Номинал (1,2,5,10,50,100,200,500) или x.");
                 Console.Write(">> ");
                 var t = Console.ReadLine();
-                if (t?.ToLower()=="x") { }
+                if (t?.ToLower() == "x") { }
                 else if (decimal.TryParse(t, out var denom))
                 {
                     if (_moneyStorage.IsValidDenomination(denom))
                     {
                         _moneyStorage.TryAddMoney(denom);
                         _cashBalance += denom;
-                        Console.WriteLine($"Принято: {denom}");
+                        Console.WriteLine($"Баланс пополнен на сумму: {denom}");
+                        Thread.Sleep(3000);
                     }
                     else
                     {
-                        Console.WriteLine("Номинал не принят.");
+                        Console.WriteLine("Такую монету мы еще не видели (мб это те самые 25 рублей фифа 2018). Попробуйте другую.");
+                        Thread.Sleep(3000);
                     }
                 }
                 else
@@ -125,46 +125,45 @@ public class VendingMachine
             }
             else if (m == "2")
             {
-                // 70% шанс ошибки
-                bool fail = _rnd.NextDouble() < 0.7;
-                if (fail)
+                Console.WriteLine("Сумма пополнения (карта) или x.");
+                Console.Write(">> ");
+                var t = Console.ReadLine();
+                if (t?.ToLower() == "x") { }
+                else if (decimal.TryParse(t, out var amount) && amount > 0)
                 {
-                    Console.WriteLine("Ошибка подключения к сети");
-                    string msg = "*Наверное опять глушат...*";
-                    foreach (char ch in msg)
+                    bool fail = _rnd.NextDouble() < 0.5;
+                    if (fail)
                     {
-                        Console.Write(ch);
-                        Thread.Sleep(40);
-                    }
-                    Console.WriteLine();
-                    Thread.Sleep(2000);
-                }
-                else
-                {
-                    Console.WriteLine("Сумма пополнения (карта) или x.");
-                    Console.Write(">> ");
-                    var t = Console.ReadLine();
-                    if (t?.ToLower()=="x") { }
-                    else if (decimal.TryParse(t, out var amount) && amount > 0)
-                    {
-                        _cardBalance += amount;
-                        Console.WriteLine($"Зачислено: {amount}");
+                        Console.WriteLine("СБП: Ошибка подключения к сети");
+                        string msg = "*Наверное опять глушат...*";
+                        foreach (char ch in msg)
+                        {
+                            Console.Write(ch);
+                            Thread.Sleep(40);
+                        }
+                        Console.WriteLine();
+                        Thread.Sleep(3000);
                     }
                     else
                     {
-                        Console.WriteLine("Ошибка ввода.");
+                        _cardBalance += amount;
+                        Console.WriteLine($"Успешная операция на сумму: {amount}");
+                        Console.WriteLine("Спасибо что используете СБП!");
+                        Thread.Sleep(3000);
                     }
+                }
+                else
+                {
+                    Console.WriteLine("Ошибка ввода.");
                 }
             }
             else
             {
                 Console.WriteLine("Неизвестно.");
             }
-
-            Console.Write("Ещё пополнение? (y/n): ");
-            again = Console.ReadLine()?.ToLower() == "y";
         }
     }
+
 
     private void BuyFlow()
     {
@@ -225,7 +224,7 @@ public class VendingMachine
         var total = TotalUserBalance;
         if (total <= 0)
         {
-            ConsoleUI.Pause("Баланс пуст.");
+            ConsoleUI.Pause("Баланс равен 0.");
             return;
         }
 
@@ -273,7 +272,7 @@ public class VendingMachine
 
     private void EnterAdminMode()
     {
-        ConsoleUI.Clear();
+        Console.Clear();
         Console.Write("Пароль: ");
         var pass = Console.ReadLine();
         if (pass != ADMIN_PASS)
@@ -281,6 +280,10 @@ public class VendingMachine
             ConsoleUI.Pause("Отказано.");
             return;
         }
+        
+        Console.WriteLine("Открываем автомат...");
+        Thread.Sleep(1500);
+        Console.Clear();
 
         bool run = true;
         while (run)
@@ -318,8 +321,6 @@ public class VendingMachine
             string name = s.IsEmpty() ? "ПУСТО" : s.Product!.Name;
             Console.WriteLine($"{i+1}. {name} | Цена {s.Price} | Кол-во {s.Quantity}");
         }
-        Console.WriteLine($"Наличных внутри: {_moneyStorage.TotalCash()}");
-        Console.WriteLine($"Карточный баланс (внесённый): {_cardBalance}");
         ConsoleUI.Pause();
     }
 
@@ -344,7 +345,7 @@ public class VendingMachine
         Console.Write("Количество: ");
         if (!int.TryParse(Console.ReadLine(), out var qty) || qty<0)
         {
-            ConsoleUI.Pause("Ошибка количества.");
+            ConsoleUI.Pause("Ошибка колва.");
             return;
         }
         s.SetProduct(new Product(name), price, qty);
@@ -370,6 +371,9 @@ public class VendingMachine
         ConsoleUI.Clear();
         Console.WriteLine("Инкассация");
         Console.WriteLine("------------------");
+        Console.WriteLine($"Баланс нал: {_cashBalance}");
+        Console.WriteLine($"Баланс безнал: {_cardBalance}");
+        Console.WriteLine("------------------");
         Console.WriteLine("1. Нал");
         Console.WriteLine("2. Карта");
         Console.WriteLine("0. Назад");
@@ -389,7 +393,7 @@ public class VendingMachine
             var pack = _moneyStorage.TryExtractExact(amount);
             if (pack == null)
             {
-                ConsoleUI.Pause("Невозможно собрать указанную сумму номиналами.");
+                ConsoleUI.Pause("Невозможно собрать указанную сумму.");
                 return;
             }
             Console.WriteLine("Выдано (нал):");
@@ -406,11 +410,11 @@ public class VendingMachine
         {
             if (_cardBalance < amount)
             {
-                ConsoleUI.Pause("Недостаточно карточных средств.");
+                ConsoleUI.Pause("Недостаточно средств.");
                 return;
             }
             _cardBalance -= amount;
-            Console.WriteLine($"Списано с карточного баланса: {amount}");
+            Console.WriteLine($"Списано с баланса безнала: {amount}");
             ConsoleUI.Pause();
         }
         else

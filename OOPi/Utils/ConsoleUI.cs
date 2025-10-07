@@ -6,7 +6,7 @@ public static class ConsoleUI
     {
         if (!string.IsNullOrWhiteSpace(msg))
             Console.WriteLine(msg);
-        Console.WriteLine("Enter...");
+        Console.WriteLine("Нажмите Enter...");
         Console.ReadLine();
     }
 
