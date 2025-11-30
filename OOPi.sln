@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OOPi", "OOPi\OOPi.csproj", "{9D9C9A38-7347-45BB-A4DA-088F8B89CCAC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab1", "Lab1\Lab1.csproj", "{9D9C9A38-7347-45BB-A4DA-088F8B89CCAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab0", "Lab0\Lab0.csproj", "{AAC283D2-062B-422A-BDD7-750F2EB3124C}"
+EndProject
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +15,11 @@ Global
 		{9D9C9A38-7347-45BB-A4DA-088F8B89CCAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D9C9A38-7347-45BB-A4DA-088F8B89CCAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D9C9A38-7347-45BB-A4DA-088F8B89CCAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAC283D2-062B-422A-BDD7-750F2EB3124C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAC283D2-062B-422A-BDD7-750F2EB3124C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAC283D2-062B-422A-BDD7-750F2EB3124C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAC283D2-062B-422A-BDD7-750F2EB3124C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal
