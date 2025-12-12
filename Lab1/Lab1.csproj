@@ -8,6 +8,12 @@
         <Nullable>enable</Nullable>
         <PublishAot>true</PublishAot>
         <InvariantGlobalization>true</InvariantGlobalization>
+        <RootNamespace>OOPi</RootNamespace>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Core\" />
+      <Folder Include="Models\" />
+    </ItemGroup>
 
 </Project>
